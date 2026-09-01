@@ -1,49 +1,86 @@
 # React Frontend
 
-This is a simple React frontend application.
+## Overview
 
-## Getting Started
+This React application provides the user interface for a cloud-native web application. It communicates with a serverless backend API hosted on AWS Lambda and includes basic reliability enhancements for improved user experience.
 
-### Prerequisites
+## Features
 
-- Node.js and npm installed on your machine.
+- React-based user interface
+- Communication with AWS Lambda backend
+- Configuration-driven API endpoints
+- Retry logic with exponential backoff
+- Basic latency monitoring
+- LocalStack compatibility for local development
 
-### Installation
+## Prerequisites
 
-1. Navigate to the project directory:
-   ```bash
-   cd react-frontend
-   ```
+- Node.js
+- npm
 
-2. Install the dependencies:
-   ```bash
-   npm install
-   ```
+## Installation
 
-### Running the Application
+Navigate to the frontend directory:
 
-To start the development server, run:
+```bash
+cd frontend
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+## Running the Application
+
+Start the development server:
+
 ```bash
 npm start
 ```
 
-This will start the app on a local development server, typically at `http://localhost:3000`.
+The application will be available at:
 
-### Building for Production
+```text
+http://localhost:3000
+```
 
-To create an optimized production build, run:
+## Production Build
+
+Create an optimized production build:
+
 ```bash
 npm run build
 ```
 
-This will output the build files to the `build` directory.
+Production files will be generated in the `build/` directory.
 
 ## Project Structure
 
-- `public/`: Contains the HTML file and static assets.
-- `src/`: Contains the React components and styles.
-- `src/config.js`: Contains the API Urls, and Keys.
-- `package.json`: Lists the project dependencies and scripts.
+```text
+src/
+├── App.js
+├── config.js
+├── index.js
+├── index.css
+
+public/
+├── index.html
+```
+
+## Configuration
+
+Application endpoints are configured in `src/config.js`.
+
+For production deployments, sensitive values should be managed using environment variables rather than hardcoded configuration.
+
+## Technologies Used
+
+- React
+- JavaScript
+- AWS Lambda
+- LocalStack
 
 ## License
 
