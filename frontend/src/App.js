@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import config from './config';
 
-// Reliability Feature: Retry Logic with Exponential Backoff
+// Retry Logic with Exponential Backoff
 async function fetchWithRetry(url, options = {}, retries = 2, delay = 300) {
   try {
     return await fetch(url, options);
