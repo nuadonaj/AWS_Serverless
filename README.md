@@ -1,98 +1,134 @@
-# 56Bit — AWS Cloud Engineer Assessment - Nua Donaj
+AWS Cloud Engineering Project - Reliability & Observability Assessment
+Project Overview
 
-## 🌍 Scenario
+This project focuses on improving the reliability and observability of a simple cloud-based web service.
 
-You've been tasked by the 56Bit engineering team with improving the reliability and observability of a simple web service deployed to the cloud. Your mission is to:
-- Deploy a containerised service
-- Ensure it is monitored and alertable
-- Introduce reliability measures
-- Simulate and document an incident and the response
+The objectives were to:
 
-You are required to:
-- Containerise and host both the frontend and backend (either locally or in a cloud environment)
-- Ensure both services are accessible and can communicate with each other correctly
-- The frontend includes a `src/config.js` file where API URLs etc. are configured.
-- The frontend must be configured to call the backend Lambda correctly
+Deploy a containerised service
+Implement monitoring and alerting concepts
+Introduce reliability improvements
+Simulate and document an incident response scenario
 
+The solution includes:
 
-    Tools & Technologies Used:
+Containerised frontend and backend services
+Frontend to backend communication through AWS Lambda
+Infrastructure management using Terraform
+AWS service simulation using LocalStack
+CI/CD pipeline design and deployment workflow
+Tools & Technologies Used
+Terraform (Infrastructure as Code)
+LocalStack (AWS simulation, free tier)
+Docker (containerisation)
+React (frontend)
+AWS Lambda (backend)
+GitHub Pages (frontend hosting)
+Node.js (backend runtime)
+GitHub Actions (CI/CD pipeline outline)
 
-    Terraform (Infrastructure as Code)
+1. Deploying a Simple Web Service
 
-    LocalStack (AWS simulation, free tier)
+For this project, I outlined how a CI/CD pipeline would work in a real-world environment.
 
-    Docker (containerisation)
+The pipeline performs the following actions:
 
-    React (frontend)
+Build the frontend application
+Package the Lambda function
+Run automated tests
+Execute Terraform plan and apply
+Deploy to either LocalStack or AWS
 
-    AWS Lambda (backend)
+The frontend was configured to communicate correctly with the backend Lambda function through configurable API endpoints.
 
-    GitHub Pages (frontend hosting, provides 60 hours of free credits monthly)
-
-    Node.js (backend runtime)
-
-    GitHub Actions (CI/CD outline)
-
-
-1. Deploy a Simple Web Service
-
-I outlined how a CI/CD pipeline would work for this project.
-It does:
-
-    Build the frontend
-
-    Package the Lambda function
-
-    Run tests
-
-    Run Terraform plan/apply
-
-    Deploy to LocalStack or AWS
-
-2. Set Up Basic Monitoring and Alerting
+2. Monitoring and Observability
 Implemented Monitoring
 
-For this project, I added a basic latency measurement in the frontend (because frontend display latency which affects user experience). If had accessed to fully paid AWS platform would prefer to use cloudwatch metrics, dashboard and anomoly detection.
+For this project, I implemented basic latency monitoring in the frontend because latency directly affects user experience.
+
 Each API request records:
 
-    the start time
+Start time
+End time
+Calculated latency
 
-    the end time
+This provides a simple health indicator for backend responsiveness.
 
-    the calculated latency
+The latency measurement logic was added within the frontend application alongside the API request functions.
 
-This gives a simple health indicator of backend responsiveness. The code was added in app.js file between the two fetch fucntion
+Proposed Monitoring Enhancements
 
+Due to time constraints, more advanced monitoring features were not implemented.
 
-#Proposed solutions that have not been done due to time constraints for Monitoring
+In a production AWS environment, I would propose using CloudWatch Logs for log collection and exporting logs to Amazon S3 for long-term retention, as S3 is significantly more cost-effective for storing large amounts of historical log data.
 
-In a real AWS environment, I would propose using CloudWatch Logs to collect logs and export them into an S3 bucket, since S3 is much cheaper for long‑term retention. Once logs are stored in S3, they can be analyzed using Amazon Athena, which makes it easy to run SQL queries directly on the log files without loading them into a database. Logs older than a certain period (for example 3 years) can be automatically moved to a cheaper storage tier such as Glacier, depending on retention needs. Storing logs in S3 also makes it easy to share them with engineers for troubleshooting and investigations, which is an important component in any IT infrastructure.
+Once logs are stored in S3, Amazon Athena could be used to run SQL queries directly against the log files for troubleshooting and analysis without requiring a dedicated database.
 
-In addition, AWS offers more advanced CloudWatch capabilities such as Anomaly Detection, which automatically learns normal application behaviour and alerts when metrics deviate from expected patterns, and CloudWatch Dashboards, which allow teams to visualise latency, error rates, and system health in real time. 
+Older logs could automatically transition to lower-cost storage tiers such as Amazon Glacier based on retention requirements.
 
-#Proposed solutions that have not been done due to time constraints for choosing and using a Database
+This approach provides a scalable and cost-effective logging solution while making logs easily accessible for investigations and operational support.
 
-In a real AWS environment, I would deploy a serverless NoSQL DynamoDB table, secured through strict least‑privilege IAM access, encrypted at rest with AES‑256 via KMS, and optionally accessed through a VPC endpoint for private network traffic. VPC endpoint is cheap and ensures traffic does not bypass the internet. In case of highly sensitive HIPA regulated bussiness Customer keys adn CloudHSM can also be levereged to ensure not even AWS has the decryption keys and data can be enrypted before.
+In addition, AWS CloudWatch offers advanced capabilities such as:
 
-3. Add Reliability Features
+CloudWatch Dashboards
+CloudWatch Anomaly Detection
+CloudWatch Alarms
 
+These services enable teams to visualise latency, error rates and overall system health while automatically detecting abnormal application behaviour.
 
-I added a simple reliability feature to the frontend: retry logic with exponential backoff.
-If an API request fails (e.g., LocalStack delay, Lambda cold start), the frontend automatically retries the request up to 3 times, waiting slightly longer each time.
+Proposed Database Design
 
-This improves resilience without changing the backend.
+Although the application does not currently require a database, a production implementation could make use of Amazon DynamoDB.
 
-Where implemented:  
-Both API calls now use a fetchWithRetry() wrapper instead of fetch().
+The proposed design would include:
 
-How tested:  
-I simulated failures by stopping LocalStack, adding delays in Lambda, and forcing errors.
-The frontend retried the requests correctly in all cases.
+Serverless NoSQL architecture using DynamoDB
+Least-privilege IAM permissions
+Encryption at rest using AWS KMS
+Optional VPC Endpoints for private AWS network traffic
 
-Resources used:  
-AWS documentation on the exponential backoff reliability pattern and the AWS Well‑Architected Reliability Pillar.
+VPC Endpoints provide an additional layer of security by ensuring traffic remains within AWS networks rather than traversing the public internet.
 
+For highly regulated environments handling sensitive information, customer-managed keys and AWS CloudHSM could also be considered to provide greater control over encryption key management.
 
-4. I simulated an incident by stopping the LocalStack container, causing the backend API to become unavailable. The frontend retried the request three times using exponential backoff, then returned an error message. This confirmed that the reliability feature works as expected.
+3. Reliability Improvements
 
-In a real AWS environment, premium services such as CloudWatch Alarms, CloudWatch Anomaly Detection, AWS X-Ray, and CloudTrail Insights could be used to detect, trace, and analyze similar incidents. This solution would be more good for enteprise version.
+I implemented a simple reliability feature in the frontend using retry logic with exponential backoff.
+
+If an API request fails, for example because of a service delay, temporary outage or Lambda cold start, the frontend automatically retries the request up to three times while increasing the wait time between attempts.
+
+This improves resilience without requiring changes to the backend service.
+
+Implementation
+
+Both API calls use a fetchWithRetry() wrapper instead of the standard fetch() function.
+
+Testing
+
+I tested the solution by:
+
+Stopping LocalStack services
+Introducing artificial delays
+Forcing request failures
+
+In all scenarios, the retry mechanism behaved as expected and attempted recovery before reporting an error to the user.
+
+References
+AWS Documentation: Exponential Backoff and Retry Patterns
+AWS Well-Architected Framework - Reliability Pillar
+4. Incident Simulation and Response
+
+To validate the reliability controls, I simulated an incident by stopping the backend service, causing API requests to fail.
+
+The frontend retried requests three times using exponential backoff before displaying an error message to the user.
+
+This confirmed that the retry mechanism worked as intended and provided graceful failure handling during service outages.
+
+In a production AWS environment, services such as:
+
+CloudWatch Alarms
+CloudWatch Anomaly Detection
+AWS X-Ray
+CloudTrail Insights
+
+could be used to detect, trace and investigate similar incidents more effectively. These services would provide better visibility and faster root cause analysis in an enterprise environment.
