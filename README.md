@@ -24,7 +24,7 @@ Docker (containerisation)
 React (frontend)
 AWS Lambda (backend)
 GitHub Pages (frontend hosting)
-Node.js (backend runtime)
+Python (backend runtime)
 GitHub Actions (CI/CD pipeline outline)
 
 1. Deploying a Simple Web Service
