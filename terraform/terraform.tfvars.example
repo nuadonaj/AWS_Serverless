@@ -21,3 +21,4 @@ localstack_endpoint = "http://localhost:4566"
 function_name   = "sre-backend-lambda"
 api_name        = "sre-http-api"
 lambda_zip_path = "../backend/lambda.zip"
+
